@@ -8,10 +8,16 @@ Visualization of digitized suctorian morphologies, dynamic trajectories, and sim
 
 ## Installation
 
-This package requires pyqtgraph. install the package with:
+This application uses PyQt5, PyOpenGL and pyqtgraph to handle fast 3D vieweing of cell morphologies. Install the package with:
 
 ```bash
 pip install git+https://github.com/CoyleLab-UW-Madison/suctorian_viewer
+```
+
+then run the application as
+
+```bash
+suctorian-viewer
 ```
 
 Note this package is still in early stages of development.
