@@ -1,0 +1,30 @@
+[project]
+name = "suctorian_viewer"
+version = "0.1.0"
+description = "Visualization of digitized suctorian morphologies, dynamic trajectories, and simulation data."
+authors = [{ name = "Coyle Lab @ UW-Madison" }]
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "PyQt5",
+    "pyqtgraph",
+    "PyOpenGL",
+    "numpy",
+    "matplotlib",
+    "pandas"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["suctorian_viewer*"]
+
+[tool.setuptools.package-data]
+suctorian_viewer = ["splash.png"]
+
+[project.scripts]
+suctorian-viewer = "suctorian_viewer.__main__:main"
