@@ -2,6 +2,7 @@
 import sys
 from PyQt5 import QtWidgets, QtGui
 from .suctorian_viewer import TentacleViewer  # adjust if your class is in a different file
+import time
 
 # importlib.resources for Python 3.7+
 try:
@@ -25,6 +26,7 @@ def main():
     except FileNotFoundError:
         pass  # optional: proceed without splash if missing
 
+    time.sleep(2)
     # Launch your main viewer
     viewer = TentacleViewer()
     viewer.resize(1200, 700)

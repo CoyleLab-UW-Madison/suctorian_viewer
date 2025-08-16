@@ -82,6 +82,49 @@ class MorphPlayback(QtWidgets.QWidget):
         self.current_idx += 1
 
 
+class TimePlayback(QtWidgets.QWidget):
+    def __init__(self, time_slider, update_fn, parent=None):
+        """
+        time_slider: QSlider controlling time (0..T-1)
+        update_fn: function(t) -> updates visualization to time t
+        """
+        super().__init__(parent)
+
+        self.time_slider = time_slider
+        self.update_fn = update_fn
+
+        # Button
+        self.button = QtWidgets.QPushButton("▶")
+        self.button.setFixedSize(24, 24)
+        self.button.clicked.connect(self.toggle_play)
+
+        # Timer ~30fps
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(33)  
+        self.timer.timeout.connect(self.advance_frame)
+
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.addWidget(self.button)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+    def toggle_play(self):
+        if self.timer.isActive():
+            self.timer.stop()
+            self.button.setText("▶")
+        else:
+            self.timer.start()
+            self.button.setText("⏸")
+
+    def advance_frame(self):
+        current = self.time_slider.value()
+        if current < self.time_slider.maximum():
+            self.time_slider.setValue(current + 1)
+        else:
+            self.time_slider.setValue(0)  # loop back
+        self.update_fn(self.time_slider.value())
+
+
+
 class TentacleViewer(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -216,8 +259,16 @@ class TentacleViewer(QtWidgets.QWidget):
         self.time_slider.setTickInterval(1)
         self.time_slider.valueChanged.connect(self.on_time_changed)
 
-        left_v.addWidget(self.time_slider)
+        self.time_playback = TimePlayback(self.time_slider, self.on_time_changed)
 
+
+        # Time slider + play button side by side
+        time_layout = QtWidgets.QHBoxLayout()
+        time_layout.addWidget(self.time_slider, 1)       # stretch
+        time_layout.addWidget(self.time_playback)
+
+        left_v.addLayout(time_layout)
+        
         # ------------------ Right: density plot (N vs L) ------------------
         right_v = QtWidgets.QVBoxLayout()
 
